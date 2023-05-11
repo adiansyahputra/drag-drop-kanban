@@ -11,6 +11,7 @@ import { AddIcon } from '@chakra-ui/icons';
 import { TaskModel } from '../utils/models';
 import Task from './Task';
 import useColumnTasks from '../hooks/useColumnTask';
+import useColumnDrop from '../hooks/useColumnDrop';
 
 const ColumnColorScheme: Record<ColumnType, string> = {
   Todo: 'gray',
@@ -41,8 +42,16 @@ const ColumnColorScheme: Record<ColumnType, string> = {
 // ];
 
 function Column({ column }: { column: ColumnType }) {
-  const { tasks, addEmptyTask, deleteTask, updateTask } =
-    useColumnTasks(column);
+  const {
+    tasks,
+    addEmptyTask,
+    deleteTask,
+    updateTask,
+    dropTaskFrom,
+    swapTasks,
+  } = useColumnTasks(column);
+
+  const { dropRef, isOver } = useColumnDrop(column, dropTaskFrom);
 
   const ColumnTask = tasks.map((task, index) => (
     <Task
@@ -51,6 +60,7 @@ function Column({ column }: { column: ColumnType }) {
       index={index}
       onDelete={deleteTask}
       onUpdate={updateTask}
+      onDropHover={swapTasks}
     />
   ));
 
@@ -80,15 +90,18 @@ function Column({ column }: { column: ColumnType }) {
         onClick={addEmptyTask}
       />
       <Stack
+        ref={dropRef}
         direction={{ base: 'row', md: 'column' }}
         h={{ base: 300, md: 600 }}
         p={4}
         mt={2}
         spacing={4}
-        bgColor={useColorModeValue('gray.50', 'gray900')}
+        bgColor={useColorModeValue('gray.50', 'gray.900')}
         rounded="lg"
         boxShadow="md"
         overflow="auto"
+        alignItems="start"
+        opacity={isOver ? 0.85 : 1}
       >
         {ColumnTask}
       </Stack>

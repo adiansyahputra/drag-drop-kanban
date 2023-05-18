@@ -13,8 +13,8 @@ function DarkModeIconButton({
     <IconButton
       onClick={toggleColorMode}
       icon={isDark ? <MoonIcon /> : <SunIcon />}
-      aria-label={'dark-mode-toggle'}
       {...rest}
+      aria-label={'dark-mode-toggle'}
     />
   );
 }
